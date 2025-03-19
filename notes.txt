@@ -3,3 +3,37 @@ linkedin_scraper/
 │── save_to_db.py    # Çekilen veriyi SQLite'a kaydeden kod
 │── linkedin_jobs.db  # SQLite veri tabanı (oluşacak)
 │── requirements.txt  # Gerekli kütüphaneler (isteğe bağlı)
+
+categories = [
+    "Software Engineer",
+    "Computer Engineer",
+    "Data Analyst / Data Scientist",
+    "Web / Mobile Developer",
+    "IT Support Specialist",
+    "DevOps Engineer",
+    "Cybersecurity Specialist",
+    "Cloud Engineer",
+    "Network Engineer / Systems Administrator",
+    "Database Administrator (DBA)",
+    "Embedded Systems / Hardware Engineer",
+    "Site Reliability Engineer (SRE)",
+    "Robotics Engineer",
+    "IoT Engineer",
+    "Blockchain Developer",
+    "AR/VR Developer",
+    "AI / Machine Learning Engineer",
+    "Product Manager",
+    "Business Analyst",
+    "System Analyst",
+    "Project Manager",
+    "Business Development Specialist",
+    "Financial Analyst",
+    "Operations Manager",
+    "Sales and Marketing Manager",
+    "Customer Relations Specialist",
+    "Production/Manufacturing Engineer",
+    "Game Designer",
+    "Logistics / Supply Chain Manager",
+    "University Professor / Academic Staff"
+]
+
