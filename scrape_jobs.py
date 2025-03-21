@@ -179,7 +179,7 @@ for category in categories:
                 })
                 
                 print(f"İlan {i+1}: {job_title} -> {location_text}, {release_date_parsed}, {applicant_number_parsed}, {workplace_type}, {employment_type}")
-                print("Job Description (ilk 200 karakter):", job_description_text[:200])
+                print("Job Description (ilk 200 karakter):", job_description_text)
             except Exception as e:
                 print(f"İlan {i+1} işlenirken hata oluştu: {str(e)}")
     
@@ -190,7 +190,7 @@ for category in categories:
             try:
                 # Arayüz dili Türkçe ise "Sayfa {page}", İngilizce ise "Page {page}" olabilir.
                 # Duruma göre XPath ifadenizi güncelleyin.
-                page_button = driver.find_element(By.XPATH, f"//button[@aria-label='Sayfa {page}']")
+                page_button = driver.find_element(By.XPATH, f"//button[@aria-label='Page {page}']")
                 driver.execute_script("arguments[0].click();", page_button)
                 time.sleep(2)
             except Exception as e:
