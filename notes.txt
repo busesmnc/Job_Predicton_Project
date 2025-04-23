@@ -39,3 +39,138 @@ categories = [
     "University Professor / Academic Staff"
 ]
 
+
+becholar olcaklar:(
+bachelor
+bachelor's degree
+undergraduate
+university degree
+university student
+college degree
+B.Sc
+BSc
+BS degree
+Bachelor of Science
+Bachelor of Engineering
+Bachelor of Technology
+BEng, BTech
+currently studying
+currently enrolled
+final year
+last year student
+4th grade, 4th year
+3rd grade, 3rd year
+junior year
+2nd year, 2nd grade
+1st year, 1st grade
+sophomore
+freshman
+student internship
+student position
+internship opportunity
+currently a student
+ongoing education )
+
+master olcaklarÇ: (
+master
+master's degree
+M.Sc
+MSc
+MS degree
+Master of Science
+Master of Engineering
+MEng
+postgraduate)
+
+phd olcaklar: (
+PhD
+Ph.D
+doctorate
+doctoral degree
+Dr.
+post-doc)
+
+intern olacaklar: (
+intern
+internship
+student position
+trainee
+entry-level internship)
+-------
+entry level olacaklar:(
+new grad
+entry level
+recent graduate
+fresh graduate
+graduate program
+no experience required
+open to graduates)
+
+junior olacaklar:(
+1+ years experience
+1 year experience
+1-2 years
+minimum 1 year
+at least 1 year)
+
+Mid-Level olacaklar:(
+mid level
+2+ years experience
+3+ years experience
+2-5 years
+intermediate level
+at least 3 years
+professional experience)
+
+Senior olacaklar:(
+senior
+5+ years experience
+6+ years
+5-10 years
+experienced
+minimum 5 years
+advanced level
+lead level)
+
+Expert olacaklar :(
+team lead
+technical lead
+principal engineer
+expert level
+chief
+staff engineer
+architect level
+10+ years experience)
+
+selam, burda category csv'si var. burdaki csv'ye category id sütunu eklemem gerekiyor. 
+bunları eşleştirir misin
+1	Software Engineer
+2	Computer Engineer
+3	Data Analyst / Data Scientist
+4	Web / Mobile Developer
+5	IT Support Specialist
+6	DevOps Engineer
+7	Cybersecurity Specialist
+8	Cloud Engineer
+9	Network Engineer / Systems Administrator
+10	Database Administrator (DBA)
+11	Embedded Systems / Hardware Engineer
+12	Site Reliability Engineer (SRE)
+13	Robotics Engineer
+14	IoT Engineer
+15	Blockchain Developer
+16	AR/VR Developer
+17	AI / Machine Learning Engineer
+18	Product Manager
+19	Business Analyst
+20	System Analyst
+21	Project Manager
+22	Business Development Specialist
+23	Financial Analyst
+24	Operations Manager
+25	Sales and Marketing Manager
+26	Customer Relations Specialist
+27	Production/Manufacturing Engineer
+28	Game Designer
+29	Logistics / Supply Chain Manager
+30	University Professor / Academic Staff

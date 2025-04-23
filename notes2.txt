@@ -1,0 +1,103 @@
+csv temizleme işlemleri kodları
+
+import pandas as pd
+import json
+import re
+import numpy as np
+
+def lowercase_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Convert all column names and string values in df to lowercase."""
+    df = df.copy()
+    df.columns = [col.lower() for col in df.columns]
+    for col in df.columns:
+        if df[col].dtype == object:
+            df[col] = df[col].str.lower()
+    return df
+
+def remove_emojis(text: str) -> str:
+    """Remove non-alphanumeric, non-space, non-comma characters."""
+    return re.sub(r'[^\w\s,]', '', text)
+
+def clean_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Apply remove_emojis to all string cells in df."""
+    return df.applymap(lambda x: remove_emojis(str(x)) if isinstance(x, str) else x)
+
+def load_and_clean_categories(input_csv: str, output_csv: str) -> pd.DataFrame:
+    """Load categories CSV, lowercase, clean, save, and return DataFrame."""
+    cats = pd.read_csv(input_csv)
+    cats = lowercase_df(cats)
+    cats = clean_df(cats)
+    cats.to_csv(output_csv, index=False)
+    print(f"Categories cleaned and saved to: {output_csv}")
+    return cats
+
+def expand_json_categories(df: pd.DataFrame, json_col: str = 'categories') -> pd.DataFrame:
+    """Parse a JSON string column and expand its keys into new DataFrame columns."""
+    df = df.copy()
+    def extract(cat_str):
+        try:
+            return json.loads(cat_str)
+        except:
+            return {}
+    expanded = df[json_col].apply(extract)
+    for key in expanded.iloc[0].keys():
+        df[key] = expanded.apply(lambda x: x.get(key))
+    df.drop(columns=[json_col], inplace=True)
+    return df
+
+def label_experience_levels(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize experience_level and replace 'none' with NaN."""
+    df = df.copy()
+    df['experience_level'] = df['experience_level'].replace('entry-level', 'junior')
+    df.replace({'none': pd.NA}, inplace=True)
+    return df
+
+def merge_on_job_title(df: pd.DataFrame, cats_df: pd.DataFrame, output_csv: str) -> pd.DataFrame:
+    """Merge df with cats_df on 'job_title' and save to CSV."""
+    merged = df.merge(
+        cats_df[['job_title', 'category_name', 'category_id']],
+        on='job_title', how='left'
+    )
+    merged.to_csv(output_csv, index=False)
+    print(f"Merged DataFrame saved to: {output_csv}")
+    return merged
+
+def find_duplicates(df: pd.DataFrame, subset: list = None) -> pd.DataFrame:
+    """Return duplicated rows, either full or on a subset of columns."""
+    if subset:
+        return df[df.duplicated(subset=subset, keep=False)]
+    return df[df.duplicated(keep=False)]
+
+def main():
+    # 1. Clean categories
+    cats_df = load_and_clean_categories(
+        "categories_with_attributes.csv",
+        "categories_with_attributes_updated.csv"
+    )
+    
+    # 2. Process labeled jobs
+    jobs_df = pd.read_excel("labeled_jobs_112.xlsx")
+    jobs_df = lowercase_df(jobs_df)
+    jobs_df = clean_df(jobs_df)
+    jobs_df = expand_json_categories(jobs_df)
+    jobs_df = label_experience_levels(jobs_df)
+    
+    final_df = merge_on_job_title(
+        jobs_df, cats_df, "final_labeled_data.csv"
+    )
+    
+    # 3. Process text mining data
+    text_df = pd.read_excel("jobs_tolabel.xlsx")
+    text_df = lowercase_df(text_df)
+    text_df = clean_df(text_df)
+    text_df.to_csv("text_mining_data_updated.csv", index=False)
+    print("Text mining data cleaned and saved to: text_mining_data_updated.csv")
+    
+    # 4. Find duplicates in final dataset
+    dup_all = find_duplicates(final_df)
+    dup_title_cat = find_duplicates(final_df, ['job_title', 'category_name'])
+    print("All duplicates:\n", dup_all)
+    print("Duplicates by job_title & category_name:\n", dup_title_cat)
+
+if __name__ == "__main__":
+    main()
