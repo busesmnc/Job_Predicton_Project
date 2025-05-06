@@ -238,11 +238,11 @@ def fill_unknown_values(df, cols=None):
         df[col] = df[col].replace('None', pd.NA).fillna('Unknown')
     return df
 
-new_df = fill_unknown_values(annotated_df)
+# new_df = fill_unknown_values(annotated_df)
 # new_df.to_csv("/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/annotated_job_descriptions_filled.csv", index=False)
 
 df_test2 = pd.read_csv(
-    "/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/annotated_job_descriptions_filled.csv",
+    "/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/annotated_job_descriptions_final.csv",
     na_values=['None'],
     keep_default_na=True
 )
@@ -250,3 +250,52 @@ df_test2 = pd.read_csv(
 analyze_missing_values(df_test2)
 
 # -----------
+
+def clean_experience_levels(input_csv: str, output_csv: str) -> None:
+    """
+    Cleans the job descriptions CSV by:
+    1. Lowercasing all column names and string values.
+    2. Removing rows with experience_level 'senior' or 'expert'.
+    3. Mapping 'intern' and 'entry level' to 'junior'.
+    4. Saving the cleaned DataFrame to the specified output path.
+
+    Parameters:
+    - input_csv: Path to the source CSV file.
+    - output_csv: Path where the cleaned CSV will be saved.
+    """
+    # Load the CSV
+    df = pd.read_csv(input_csv)
+
+    # Lowercase column names
+    df.columns = [col.lower() for col in df.columns]
+
+    # Lowercase all string values in object columns
+    for col in df.select_dtypes(include='object').columns:
+        df[col] = df[col].str.lower()
+
+    # Drop 'senior' and 'expert' experience levels
+    df = df[~df['experience_level'].isin(['senior', 'expert'])]
+
+    # Map 'intern' and 'entry level' to 'junior'
+    df['experience_level'] = df['experience_level'].replace({
+        'intern': 'junior',
+        'entry level': 'junior'
+    })
+
+    # Save the cleaned CSV
+    df.to_csv(output_csv, index=False)
+
+
+# clean_experience_levels(
+    '/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/annotated_job_descriptions_final.csv',
+    '/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/final_annotated_categories_and_jobs.csv'
+# )
+
+df_test3 = pd.read_csv(
+    "/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/final_annotated_categories_and_jobs.csv",
+    na_values=['None'],
+    keep_default_na=True
+)
+
+analyze_missing_values(df_test3)
+
