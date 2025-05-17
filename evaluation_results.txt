@@ -1,0 +1,26 @@
+Linear Regression Model Evaluation Results
+==================================================
+
+1. Regression Metrics:
+------------------------------
+Mean Squared Error: 233.5362
+R-squared Score: -1.8376
+
+2. Classification Metrics:
+------------------------------
+Accuracy: 0.1013
+Precision (weighted): 0.1715
+Recall/Sensitivity (weighted): 0.1013
+F1-measure (weighted): 0.1190
+
+3. Confusion Matrix:
+------------------------------
+Shape: (71, 71)
+
+[[0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ ...
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]
+ [0 0 0 ... 0 0 0]]
