@@ -1,4 +1,4 @@
-csv temizleme işlemleri kodları
+----------------------- csv cleaning codes -----------------------
 
 import pandas as pd
 import json

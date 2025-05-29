@@ -1,0 +1,149 @@
+Model Evaluation Results
+==================================================
+
+1. Test Set Performance
+------------------------------
+Overall Accuracy: 0.9346
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           1       0.94      0.84      0.89        37
+           2       0.53      0.77      0.62        13
+           3       1.00      0.96      0.98        23
+           4       1.00      0.97      0.98        33
+           5       1.00      0.98      0.99        55
+           6       0.75      0.94      0.83        16
+           7       1.00      0.67      0.80         3
+           8       1.00      1.00      1.00         9
+           9       1.00      1.00      1.00         1
+          10       1.00      1.00      1.00         2
+          11       0.95      1.00      0.97        18
+          12       0.00      0.00      0.00         1
+          13       1.00      1.00      1.00         5
+          14       1.00      0.83      0.91         6
+          15       1.00      1.00      1.00         4
+          16       1.00      1.00      1.00         4
+          17       0.86      1.00      0.92        12
+          18       1.00      0.82      0.90        11
+          19       1.00      0.90      0.95        21
+          20       1.00      1.00      1.00        10
+          21       1.00      1.00      1.00        18
+          22       0.80      1.00      0.89         4
+
+    accuracy                           0.93       306
+   macro avg       0.90      0.89      0.89       306
+weighted avg       0.94      0.93      0.94       306
+
+2. Category-wise Analysis
+------------------------------
+
+Category 1:
+Precision: 1.0000
+Recall: 0.8378
+F1 Score: 0.9118
+
+Category 2:
+Precision: 1.0000
+Recall: 0.7692
+F1 Score: 0.8696
+
+Category 3:
+Precision: 1.0000
+Recall: 0.9565
+F1 Score: 0.9778
+
+Category 4:
+Precision: 1.0000
+Recall: 0.9697
+F1 Score: 0.9846
+
+Category 5:
+Precision: 1.0000
+Recall: 0.9818
+F1 Score: 0.9908
+
+Category 6:
+Precision: 1.0000
+Recall: 0.9375
+F1 Score: 0.9677
+
+Category 7:
+Precision: 1.0000
+Recall: 0.6667
+F1 Score: 0.8000
+
+Category 8:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 9:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 10:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 11:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 12:
+Precision: 0.0000
+Recall: 0.0000
+F1 Score: 0.0000
+
+Category 13:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 14:
+Precision: 1.0000
+Recall: 0.8333
+F1 Score: 0.9091
+
+Category 15:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 16:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 17:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 18:
+Precision: 1.0000
+Recall: 0.8182
+F1 Score: 0.9000
+
+Category 19:
+Precision: 1.0000
+Recall: 0.9048
+F1 Score: 0.9500
+
+Category 20:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 21:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+
+Category 22:
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000

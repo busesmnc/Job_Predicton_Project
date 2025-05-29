@@ -1,11 +1,3 @@
-linkedin_scraper/
-│── scrape_jobs.py        # LinkedIn'den iş ilanlarını çeken kod
-│── save_to_db.py         # Çekilen veriyi SQLite'a kaydeden kod
-|-- job_data.json         # Tüm güncel verinin bulunduğu dosya
-|-- job_details.json      # Tüm en-tr karışık verinin bulunduğu dosya
-|-- text_mining_data.csv  # text mining denemesi için alt küme
-|-- translating_to_eng    # Türkçe ilanları inigilizceye çevirilmesi
-
 categories = [
     "Software Engineer",
     "Computer Engineer",

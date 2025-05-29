@@ -4,7 +4,7 @@ from langdetect import detect
 from deep_translator import GoogleTranslator
 
 def ensure_english(text):
-    # Eğer metin boşsa, çok kısaysa ya da hiçbir alfabetik karakter içermiyorsa çeviri yapmadan döndür.
+
     if not text or len(text.strip()) < 3 or not any(char.isalpha() for char in text):
         return text
     try:
@@ -29,11 +29,9 @@ fields_to_translate = [
     "category"
 ]
 
-# JSON dosyasını oku
 with open('job_details.json', 'r', encoding='utf-8') as f:
     jobs = json.load(f)
 
-# Test amacıyla sadece ilk 10 ilana bakmak isterseniz:
 # jobs = jobs[:10]
 
 job_count = len(jobs)
@@ -43,14 +41,12 @@ for idx, job in enumerate(jobs, start=1):
     for field in fields_to_translate:
         if field in job and isinstance(job[field], str) and job[field].strip():
             job[field] = ensure_english(job[field])
-            # API rate limitlerini aşmamak için isteğe bağlı kısa bekleme (0.5 saniye)
+            # API rate limitlerini aşmamak için kısa bekleme (0.5 saniye)
             time.sleep(0.5)
     print(f"Job {idx}/{job_count} processed.")
-    # İsterseniz iş ilanının tüm çevirisini gösterebilirsiniz:
     print(job)
     print("-" * 50)
 
-# Çevrilmiş veriyi yeni JSON dosyasına kaydediyoruz
 with open('job_data.json', 'w', encoding='utf-8') as f:
     json.dump(jobs, f, ensure_ascii=False, indent=4)
 

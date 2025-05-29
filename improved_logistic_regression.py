@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
@@ -16,13 +16,12 @@ from imblearn.over_sampling import SMOTE
 from scipy.sparse import hstack
 import seaborn as sns
 import matplotlib.pyplot as plt
+import joblib
 
-# Load the data
 print("Loading data...")
-data_path = '/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/final_annotated_categories_and_jobs.csv'
+data_path = '/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/f_annotated_categories_and_jobs.csv'
 df = pd.read_csv(data_path)
 
-# Define feature columns and target
 feature_columns = [
     'technical_requirements',
     'soft_skills',
@@ -33,31 +32,27 @@ feature_columns = [
 ]
 target = 'category_id'
 
-# Initialize TF-IDF vectorizers with improved parameters
 print("Preprocessing text data...")
 vectorizers = {}
 transformed_features = []
 
-# Transform each text column using TF-IDF with improved parameters
 for column in feature_columns:
     df[column] = df[column].fillna('')
     vectorizer = TfidfVectorizer(
-        max_features=2000,  # Increased from 1000
+        max_features=1000,  # Reduced from 2000
         stop_words='english',
         token_pattern=r"(?u)\b\w+\b",
-        min_df=2,  # Remove very rare terms
-        max_df=0.95,  # Remove very common terms
-        ngram_range=(1, 2)  # Include bigrams
+        min_df=2,
+        max_df=0.95,
+        ngram_range=(1, 1)  # Only unigrams
     )
     feature_matrix = vectorizer.fit_transform(df[column])
     transformed_features.append(feature_matrix)
     vectorizers[column] = vectorizer
 
-# Combine all features into one sparse matrix
 X = hstack(transformed_features)
 y = df[target]
 
-# Split the data
 print("Splitting data into train and test sets...")
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
@@ -76,37 +71,54 @@ class_weights = compute_class_weight(
 )
 class_weight_dict = dict(zip(classes, class_weights))
 
-# Apply SMOTE for handling class imbalance
+# SMOTE
 print("Applying SMOTE for class balancing...")
 smote = SMOTE(random_state=42, k_neighbors=3)
 X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 
-# Create and train the improved logistic regression model
-print("Training the model...")
-model = LogisticRegression(
-    multi_class='multinomial',
-    max_iter=2000,  # Increased from 1000
-    random_state=42,
-    class_weight=class_weight_dict,
-    C=0.1,  # Add regularization
-    solver='lbfgs',  # Better solver for multinomial
-    n_jobs=-1  # Use all CPU cores
+base_model = LogisticRegression(random_state=42)
+
+print("Performing hyperparameter tuning...")
+param_grid = {
+    'C': [0.01, 0.05, 0.1, 0.5, 1],  # Smaller C values for stronger regularization
+    'solver': ['lbfgs', 'saga'],
+    'max_iter': [2000, 3000],
+    'class_weight': [None, 'balanced']
+}
+
+grid_search = GridSearchCV(
+    estimator=base_model,
+    param_grid=param_grid,
+    cv=5,
+    scoring='f1_weighted',
+    n_jobs=-1,
+    verbose=2
 )
 
-# Perform cross-validation
-print("Performing cross-validation...")
+grid_search.fit(X_train_res, y_train_res)
+
+print("\nBest parameters found:")
+print(grid_search.best_params_)
+print(f"\nBest cross-validation score: {grid_search.best_score_:.4f}")
+
+model = grid_search.best_estimator_
+
+print("\nPerforming cross-validation with best model...")
 cv_scores = cross_val_score(model, X_train_res, y_train_res, cv=5, scoring='f1_weighted')
 print(f"Cross-validation F1 scores: {cv_scores}")
 print(f"Average CV F1 score: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})")
 
-# Train the final model on the full training set
 model.fit(X_train_res, y_train_res)
 
-# Make predictions
+# Save
+print("\nSaving model and test data...")
+joblib.dump(model, 'logistic_regression_model.joblib')
+joblib.dump(X_test, 'X_test.joblib')
+joblib.dump(y_test, 'y_test.joblib')
+
 print("Making predictions...")
 y_pred = model.predict(X_test)
 
-# Calculate all evaluation metrics
 print("\nEvaluation Metrics:")
 print("=" * 50)
 
@@ -126,7 +138,7 @@ print("Confusion Matrix Shape:", conf_matrix.shape)
 print("\nConfusion Matrix:")
 print(conf_matrix)
 
-# Create a more detailed report
+# report
 print("\n3. Detailed Classification Report by Category:")
 print("-" * 50)
 print(classification_report(y_test, y_pred))
@@ -151,16 +163,13 @@ def predict_job_category(job_details):
     
     X_new = hstack(transformed_inputs)
     
-    # Get prediction
     prediction = model.predict(X_new)[0]
     
-    # Get probability scores for all classes
     probabilities = model.predict_proba(X_new)[0]
     
-    # Get confidence score for the predicted class
     confidence = probabilities[model.classes_ == prediction][0]
     
-    # Get top 3 predictions with their probabilities
+    # 3 predictions
     top_3_indices = np.argsort(probabilities)[-3:][::-1]
     top_3_predictions = [
         (int(model.classes_[idx]), float(probabilities[idx]))
@@ -172,12 +181,12 @@ def predict_job_category(job_details):
 # Example usage
 print("\nTesting with example job posting:")
 example_job = {
-    'technical_requirements': 'python machine learning sql docker tensorflow keras scikit-learn',
-    'soft_skills': 'communication teamwork leadership problem-solving analytical-thinking',
-    'domain_knowledge': 'data analysis statistics deep learning machine learning algorithms',
-    'education_requirement': 'masters',
-    'experience_level': 'senior',
-    'project_experience': 'built production machine learning models deployed to cloud infrastructure'
+    'technical_requirements': 'research methodology statistical analysis python r machine learning',
+    'soft_skills': 'communication critical thinking teamwork presentation skills',
+    'domain_knowledge': 'curriculum development higher education pedagogy academic writing ethics',
+    'education_requirement': 'junior',
+    'experience_level': 'mid level',  # Örnek: 3-5 years academia experience
+    'project_experience': 'grant proposal writing interdisciplinary research project publication review process'
 }
 
 predicted_category, confidence, top_3 = predict_job_category(example_job)

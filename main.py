@@ -7,8 +7,7 @@ import ast
 
 pd.set_option('display.max_columns', None)
 
-
-cats = pd.read_csv("/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/categories_with_attributes_updated.csv")
+cats = pd.read_csv("/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/categories_with_attributes.csv")
 jobs = pd.read_csv("/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/text_mining_data_updated.csv")
 df = pd.read_csv("/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/annotated_job_descriptions_fixed.csv")
 annotated_df = pd.read_csv("/Users/busesomunncu/Desktop/Linkedln Job Prediction Project/annotated_job_descriptions.csv")
@@ -25,16 +24,14 @@ def annotate_job_descriptions(
     3) FlashText ile her job_description’dan bu terimleri eşleştirir
     4) Eşleşmeleri yeni sütunlar olarak jobs DataFrame’ine ekler ve kaydeder
     """
-    # 1) Load data
+
     cats = pd.read_csv(cats_path)
     jobs = pd.read_csv(jobs_path)
 
-    # 2) Prepare columns
     id_col    = 'category_id'
     skip_cols = {id_col, 'category_name'}
     attr_cols = [c for c in cats.columns if c not in skip_cols]
 
-    # 3) Build a KeywordProcessor per category per attribute
     cat_kps = {}
     for cid, grp in cats.groupby(id_col):
         processors = {}
@@ -53,7 +50,6 @@ def annotate_job_descriptions(
             processors[col] = kp
         cat_kps[cid] = processors
 
-    # 4) Iterate over jobs and extract matches
     results = {col: [] for col in attr_cols}
     for _, row in jobs.iterrows():
         desc       = str(row['job_description']).lower()
@@ -66,7 +62,6 @@ def annotate_job_descriptions(
             else:
                 results[col].append("")
 
-    # 5) Attach results and save
     for col in attr_cols:
         jobs[col] = results[col]
 
@@ -86,7 +81,6 @@ def prepare_normalized_csv(df):
       - Normalized education and experience levels
     """
 
-    # 1) Keep only necessary columns
     keep_cols = [
         'id', 'category_id',
         'technical_requirements', 'soft_skills', 'domain_knowledge',
@@ -94,7 +88,6 @@ def prepare_normalized_csv(df):
     ]
     df_new = df[keep_cols].copy()
 
-    # 2) Define mappings inside the function
     edu_map = {
         'Bachelor': [
             'bachelor', "bachelor's degree", 'undergraduate', 'university degree', 'university student',
@@ -263,26 +256,20 @@ def clean_experience_levels(input_csv: str, output_csv: str) -> None:
     - input_csv: Path to the source CSV file.
     - output_csv: Path where the cleaned CSV will be saved.
     """
-    # Load the CSV
     df = pd.read_csv(input_csv)
 
-    # Lowercase column names
     df.columns = [col.lower() for col in df.columns]
 
-    # Lowercase all string values in object columns
     for col in df.select_dtypes(include='object').columns:
         df[col] = df[col].str.lower()
 
-    # Drop 'senior' and 'expert' experience levels
     df = df[~df['experience_level'].isin(['senior', 'expert'])]
 
-    # Map 'intern' and 'entry level' to 'junior'
     df['experience_level'] = df['experience_level'].replace({
         'intern': 'junior',
         'entry level': 'junior'
     })
 
-    # Save the cleaned CSV
     df.to_csv(output_csv, index=False)
 
 
@@ -298,4 +285,3 @@ df_test3 = pd.read_csv(
 )
 
 analyze_missing_values(df_test3)
-

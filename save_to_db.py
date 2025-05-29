@@ -108,15 +108,15 @@ def save_jobs_to_db(job_details_list):
     conn.close()
 
 if __name__ == "__main__":
-    # Adım 1: Veritabanı bağlantısı oluştur ve tabloları yarat
+    #Veritabanı bağlantısı oluştur ve tabloları yarat
     conn = create_connection()
     create_tables(conn)
     conn.close()
     print("Tablolar başarıyla oluşturuldu.")
     
-    # Adım 2: JSON dosyasından veriyi oku (dosya adı: job_data.json)
+    # JSON dosyasından veriyi oku (dosya adı: job_data.json)
     job_details_list = load_jobs_from_json("job_data.json")
     
-    # Adım 3: Verileri veritabanına kaydet
+    # Verileri veritabanına kaydet
     save_jobs_to_db(job_details_list)
     print("Veriler veritabanına kaydedildi.")
